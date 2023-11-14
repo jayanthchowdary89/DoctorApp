@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoctorApp.Migrations
 {
     [DbContext(typeof(DoctorAppDbContext))]
-    [Migration("20231112160152_mg6")]
-    partial class mg6
+    [Migration("20231114130042_mg15")]
+    partial class mg15
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -130,6 +130,7 @@ namespace DoctorApp.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Gender")
@@ -141,6 +142,7 @@ namespace DoctorApp.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("PName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("P_UserId")
@@ -148,6 +150,11 @@ namespace DoctorApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PId");

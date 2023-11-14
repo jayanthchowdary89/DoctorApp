@@ -143,7 +143,9 @@ namespace DoctorApp.Controllers
 
                     PName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Name)?.Value,
 
-                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value
+                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
+
+                    Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
 
                 };
             }
@@ -153,7 +155,7 @@ namespace DoctorApp.Controllers
         }
 
         [HttpGet("Profile")]
-        [Authorize]
+        [Authorize(Roles ="Patient")]
         public IActionResult Profile()
         {
             var currentuser = GetCurrentUser();

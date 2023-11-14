@@ -17,13 +17,14 @@ namespace DoctorApp.UserServices
 
     {
         private readonly IConfiguration _config;
+        private readonly DoctorAppDbContext _context;
         public UsersLogic(IConfiguration config, DoctorAppDbContext context)
         {
             _config = config;
             _context = context;
         }
 
-        private static DoctorAppDbContext _context;
+        
 
    
         public  bool VerifyPassword(string Password, string EnteredPassword)
@@ -65,7 +66,7 @@ public string  GenerateJwtToken(Patient user)
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier,user.P_UserId),
-               // new Claim(ClaimTypes.Role,user.Role)
+                new Claim(ClaimTypes.Role,user.Role),
                 new Claim(ClaimTypes.Name,user.PName),
                 new Claim(ClaimTypes.Email,user.Email)
 

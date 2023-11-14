@@ -33,6 +33,6 @@ namespace DoctorApp.Models
         [MaxLength(10)]
         public string Mobile { get; set; }
 
-        //public string Role { get; set; }
+        public string Role { get; set; } = "Patient";
     }
 }
