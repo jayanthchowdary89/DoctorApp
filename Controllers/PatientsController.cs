@@ -25,8 +25,8 @@ namespace DoctorApp.Controllers
         }
 
         // GET: api/Patients
+        
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
           if (_context.Patients == null)
@@ -153,12 +153,12 @@ namespace DoctorApp.Controllers
         }
 
         [HttpGet("Profile")]
-        public IActionResult UserProfile()
+        [Authorize]
+        public IActionResult Profile()
         {
-            
+            var currentuser = GetCurrentUser();
 
-
-            return Ok();
+            return Ok($"hi {currentuser.P_UserId}");
         }
     }
 }

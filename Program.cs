@@ -51,13 +51,14 @@ namespace DoctorApp
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthorization();
 
             app.UseAuthentication();
 
+            app.UseAuthorization();
+
+            
+
             app.UseCors("corsapp");
-
-
 
             app.MapControllers();
 
