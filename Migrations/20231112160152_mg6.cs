@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DoctorApp.Migrations
 {
-    public partial class mg1 : Migration
+    public partial class mg6 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,7 +40,7 @@ namespace DoctorApp.Migrations
                     D_UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Mobile = table.Column<int>(type: "int", maxLength: 10, nullable: false),
+                    Mobile = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Medical_Registration = table.Column<int>(type: "int", nullable: false),
                     Specialization = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Experience = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -64,7 +64,7 @@ namespace DoctorApp.Migrations
                     P_UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Mobile = table.Column<int>(type: "int", nullable: true)
+                    Mobile = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {

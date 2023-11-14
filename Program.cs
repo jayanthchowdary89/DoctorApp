@@ -1,5 +1,10 @@
 using DoctorApp.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using DoctorApp.UserServices;
 
 namespace DoctorApp
 {
@@ -16,6 +21,26 @@ namespace DoctorApp
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<DoctorAppDbContext>(item  => item.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
+             builder.Services.AddTransient<IUsersLogic, UsersLogic>();
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                };
+            });
+
+            builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+            {
+                builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+            }));
 
             var app = builder.Build();
 
@@ -27,6 +52,11 @@ namespace DoctorApp
             }
 
             app.UseAuthorization();
+
+            app.UseAuthentication();
+
+            app.UseCors("corsapp");
+
 
 
             app.MapControllers();

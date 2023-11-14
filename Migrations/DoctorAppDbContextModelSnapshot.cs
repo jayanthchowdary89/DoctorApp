@@ -95,9 +95,10 @@ namespace DoctorApp.Migrations
                     b.Property<int>("Medical_Registration")
                         .HasColumnType("int");
 
-                    b.Property<int>("Mobile")
+                    b.Property<string>("Mobile")
+                        .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -132,8 +133,10 @@ namespace DoctorApp.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Mobile")
-                        .HasColumnType("int");
+                    b.Property<string>("Mobile")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("PName")
                         .HasColumnType("nvarchar(max)");
