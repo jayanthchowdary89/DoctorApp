@@ -40,5 +40,25 @@ namespace DoctorApp.Controllers
         }
 
 
+        [HttpPost("Doctor")]
+
+        public IActionResult LoginAuthenticationForDoc([FromBody] Login model)
+        {
+            Doctor User = _usersLogic.ValidateCredentialsForDoc(model.Username, model.Password);
+
+            if (User == null)
+            {
+                return Unauthorized();
+            }
+            else
+            {
+
+                var token = _usersLogic.GenerateJwtTokenForDoc(User);
+                return Ok(new { Token = token });
+            }
+
+        }
+
+
     }
 }

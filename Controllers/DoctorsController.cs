@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DoctorApp.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DoctorApp.Controllers
 {
@@ -32,14 +34,32 @@ namespace DoctorApp.Controllers
         }
 
         // GET: api/Doctors/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Doctor>> GetDoctor(int id)
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Doctor>> GetDoctor(int id)
+        //{
+        //  if (_context.Doctors == null)
+        //  {
+        //      return NotFound();
+        //  }
+        //    var doctor = await _context.Doctors.FindAsync(id);
+
+        //    if (doctor == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return doctor;
+        //}
+
+
+        [HttpGet("{username}")]
+        public ActionResult<Doctor> GetDoctorUser(string username)
         {
-          if (_context.Doctors == null)
-          {
-              return NotFound();
-          }
-            var doctor = await _context.Doctors.FindAsync(id);
+            if (_context.Doctors == null)
+            {
+                return NotFound();
+            }
+            var doctor = _context.Doctors.FirstOrDefault(o => o.D_UserId == username);
 
             if (doctor == null)
             {
@@ -114,8 +134,41 @@ namespace DoctorApp.Controllers
 
             return NoContent();
         }
+        [Authorize]
+        [HttpGet("GetDoctors")]
+        public IActionResult GetDoctorsProfile()
+        {
+            var currentuser = GetCurrentUserInfo();
+            return Ok(currentuser);
+        }
+        private UserInfo GetCurrentUserInfo()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
 
-        private bool DoctorExists(int id)
+            if(identity != null)
+            {
+                var userClaims = identity.Claims;
+
+                return new UserInfo{ 
+
+                 D_UserId = userClaims.FirstOrDefault(o=>o.Type == ClaimTypes.NameIdentifier).Value,
+
+                 DName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Name).Value,
+
+                 Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email).Value,
+
+                 Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role).Value
+
+
+                };
+            }
+            // Retrieve user claims from the authenticated user's identity
+            return null;
+
+        }
+
+
+            private bool DoctorExists(int id)
         {
             return (_context.Doctors?.Any(e => e.DId == id)).GetValueOrDefault();
         }

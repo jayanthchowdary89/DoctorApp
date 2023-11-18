@@ -24,8 +24,6 @@ namespace DoctorApp.UserServices
             _context = context;
         }
 
-        
-
    
         public  bool VerifyPassword(string Password, string EnteredPassword)
         {
@@ -49,17 +47,30 @@ namespace DoctorApp.UserServices
 
             return user;
         }
-       
-        
 
-//// Generate a random 256-bit (32-byte) key
-//byte[] keyBytes = new byte[32];
-//using (var rng = new RNGCryptoServiceProvider())
-//{
-//    rng.GetBytes(keyBytes);
-//}
+        public Doctor ValidateCredentialsForDoc(string username, string password)
+        {
+            var user = _context.Doctors.FirstOrDefault(u => u.D_UserId == username);
 
-public string  GenerateJwtToken(Patient user)
+            // If the user is not found or the password is incorrect, return false
+            if (user == null || !VerifyPassword(user.Password, password))
+            {
+                return null;
+            }
+
+
+            return user;
+        }
+
+
+        //// Generate a random 256-bit (32-byte) key
+        //byte[] keyBytes = new byte[32];
+        //using (var rng = new RNGCryptoServiceProvider())
+        //{
+        //    rng.GetBytes(keyBytes);
+        //}
+
+        public string  GenerateJwtToken(Patient user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -80,6 +91,32 @@ public string  GenerateJwtToken(Patient user)
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public string GenerateJwtTokenForDoc(Doctor user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier,user.D_UserId),
+                new Claim(ClaimTypes.Role,user.Role),
+                new Claim(ClaimTypes.Name,user.DName),
+                new Claim(ClaimTypes.Email,user.Email),
+                
+
+            };
+            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+                _config["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(10),
+                signingCredentials: credentials);
+
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+
+
 
 
     }

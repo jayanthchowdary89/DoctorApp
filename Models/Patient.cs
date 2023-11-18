@@ -4,12 +4,7 @@ namespace DoctorApp.Models
 {
     public class Patient
     {
-        public enum genderbar
-        {
-            Male,
-            Female,
-            Other
-        }
+      
         [Key]
 
         public int PId { get; set; }
@@ -17,12 +12,11 @@ namespace DoctorApp.Models
 
        [Range(1, 100)]
         public int Age { get; set; }
-        public genderbar Gender { get; set; }
+        public string Gender { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime DOB { get; set; }
+        public string DOB { get; set; }
         public string P_UserId { get; set; }
-
         [EmailAddress]
         public string Email { get; set; }
 
@@ -33,6 +27,11 @@ namespace DoctorApp.Models
         [MaxLength(10)]
         public string Mobile { get; set; }
 
-        public string Role { get; set; } = "Patient";
+        public string Role { get; set; } 
+
+        public string Medical_History { get; set; }
+
+
+        //public ICollection<Appointment> Appointments { get; set; }
     }
 }

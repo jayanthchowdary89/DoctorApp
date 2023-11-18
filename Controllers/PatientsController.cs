@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DoctorApp.Models;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DoctorApp.Controllers
 {
@@ -17,15 +16,12 @@ namespace DoctorApp.Controllers
     {
         private readonly DoctorAppDbContext _context;
 
-       
-
         public PatientsController(DoctorAppDbContext context)
         {
             _context = context;
         }
 
         // GET: api/Patients
-        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
@@ -94,6 +90,7 @@ namespace DoctorApp.Controllers
           {
               return Problem("Entity set 'DoctorAppDbContext.Patients'  is null.");
           }
+
             _context.Patients.Add(patient);
             await _context.SaveChangesAsync();
 
@@ -120,47 +117,35 @@ namespace DoctorApp.Controllers
             return NoContent();
         }
 
+        [HttpGet("GetUser")]
+        public IActionResult GetCurrentUserInfo()
+        {
+            // Retrieve user claims from the authenticated user's identity
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            var userNameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+
+            if (userIdClaim != null && userNameClaim != null)
+            {
+                var userId = userIdClaim.Value;
+                var userName = userNameClaim.Value;
+
+                // Return user information
+                var userInfo = new
+                {
+                    UserId = userId,
+                    UserName = userName,
+                };
+
+                return Ok(userInfo);
+            }
+
+            // If claims are not found, the user might not be properly authenticated
+            return Unauthorized();
+        }
+
         private bool PatientExists(int id)
         {
             return (_context.Patients?.Any(e => e.PId == id)).GetValueOrDefault();
-        }
-
-
-        private Patient GetCurrentUser()
-        {
-            //var claimsPrinciple = User as ClaimsPrinciple;
-
-            var identity = HttpContext.User?.Identity as ClaimsIdentity;
-
-            if (identity != null)
-            {
-                var userClaims = identity.Claims;
-
-                return new Patient
-                {
-
-                    P_UserId = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
-
-                    PName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Name)?.Value,
-
-                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
-
-                    Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
-
-                };
-            }
-
-            return null;
-
-        }
-
-        [HttpGet("Profile")]
-        [Authorize(Roles ="Patient")]
-        public IActionResult Profile()
-        {
-            var currentuser = GetCurrentUser();
-
-            return Ok($"hi {currentuser.P_UserId}");
         }
     }
 }

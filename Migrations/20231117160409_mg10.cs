@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DoctorApp.Migrations
 {
-    public partial class mg15 : Migration
+    public partial class mg10 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,8 +15,8 @@ namespace DoctorApp.Migrations
                 {
                     AId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DId = table.Column<int>(type: "int", nullable: true),
-                    PId = table.Column<int>(type: "int", nullable: true),
+                    DId = table.Column<int>(type: "int", nullable: false),
+                    PId = table.Column<int>(type: "int", nullable: false),
                     Appointment_Date = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Time_slot = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Appointment_Fee = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -36,15 +36,19 @@ namespace DoctorApp.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
-                    Gender = table.Column<int>(type: "int", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     D_UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mobile = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Medical_Registration = table.Column<int>(type: "int", nullable: false),
                     Specialization = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Experience = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Available = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Experience = table.Column<int>(type: "int", nullable: false),
+                    Dimg = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Designation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Qualification = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,13 +63,14 @@ namespace DoctorApp.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
-                    Gender = table.Column<int>(type: "int", nullable: false),
-                    DOB = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DOB = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     P_UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mobile = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Medical_History = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

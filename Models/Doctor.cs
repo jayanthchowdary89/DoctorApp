@@ -4,12 +4,7 @@ namespace DoctorApp.Models
 {
     public class Doctor
     {
-        public enum genderbar1
-        {
-            Male = 0,
-            Female = 1,
-            Others = 2,
-        }
+       
         [Key]
         public int DId { get; set; }
 
@@ -20,7 +15,9 @@ namespace DoctorApp.Models
         [Required]
 
         public int Age { get; set; }
-        public genderbar1 Gender { get; set; }
+        public string Gender { get; set; }
+
+        
         public string D_UserId { get; set; }
 
         [EmailAddress]
@@ -32,9 +29,21 @@ namespace DoctorApp.Models
         [MaxLength(10)]
         public string Mobile { get; set; }
 
+
         public int Medical_Registration { get; set; }
         public string Specialization { get; set; }
-        public string Experience { get; set; }
-        public string Available { get; set; }
+        public int Experience { get; set; }
+      //  public string Available { get; set; }
+        public string Dimg { get; set; }
+
+        public string Description { get; set; }
+
+        public string Designation {  get; set; }
+
+        public string Qualification {  get; set; }
+
+        public string Role { get; set; }
+
+        //public ICollection<Appointment> Appointments { get; set; }
     }
 }
