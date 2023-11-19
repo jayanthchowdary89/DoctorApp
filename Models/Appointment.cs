@@ -6,24 +6,29 @@ namespace DoctorApp.Models
     public class Appointment
     {
 
-        public enum AppointmentStatus
-        {
-            Pending,
-            Confirmed,
-            Cancelled,
-            Rescheduled,
-            Completed,
-        }
+        //public enum AppointmentStatus
+        //{
+        //    Pending,
+        //    Confirmed,
+        //    Cancelled,
+        //    Rescheduled,
+        //    Completed,
+        //}
         [Key]
         public int AId { get; set; }
-        
-        public int DId { get; set; }
-       // [ForeignKey("DId")]
 
-      
+        
+        [ForeignKey("Doctor")]
+        public int DId { get; set; }
+
+
+        [ForeignKey("Patient")]
         public int PId { get; set; }
 
-        //[ForeignKey("PId")]
+        public Patient Patient { get; set; }
+
+        public Doctor Doctor { get; set; }
+
         
 
         [DataType(DataType.Date)]
@@ -32,10 +37,12 @@ namespace DoctorApp.Models
         [DataType(DataType.Time)]
         public string Time_slot { get; set; }
 
-        [DataType(DataType.Currency)]
-        public decimal Appointment_Fee { get; set; }
-        public bool? Is_approved { get; set; }
-        public AppointmentStatus Status { get; set; }
+       // [DataType(DataType.Currency)]
+        public int Appointment_Fee { get; set; }
+
+       // public bool? Is_approved { get; set; }
+
+        //public AppointmentStatus Status { get; set; }
 
         
     }

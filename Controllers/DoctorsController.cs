@@ -71,6 +71,26 @@ namespace DoctorApp.Controllers
             return doctor;
         }
 
+
+
+        [HttpGet("GetDoctorBySpecialization/{dept}")]
+
+        public ActionResult<Doctor> GetDoctorBySpecialization(string dept)
+        {
+            if (_context.Doctors == null)
+            {
+                return NotFound();
+            }
+            var doctor = _context.Doctors.FirstOrDefault(o => o.Specialization == dept);
+
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
+            return doctor;
+        }
+
         // PUT: api/Doctors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
