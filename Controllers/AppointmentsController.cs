@@ -25,10 +25,10 @@ namespace DoctorApp.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments()
         {
-          if (_context.Appointments == null)
-          {
-              return NotFound();
-          }
+            if (_context.Appointments == null)
+            {
+                return NotFound();
+            }
             return await _context.Appointments.ToListAsync();
         }
 
@@ -86,10 +86,10 @@ namespace DoctorApp.Controllers
         [HttpPost]
         public async Task<ActionResult<Appointment>> PostAppointment(Appointment appointment)
         {
-          if (_context.Appointments == null)
-          {
-              return Problem("Entity set 'DoctorAppDbContext.Appointments'  is null.");
-          }
+            if (_context.Appointments == null)
+            {
+                return Problem("Entity set 'DoctorAppDbContext.Appointments'  is null.");
+            }
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
@@ -122,7 +122,6 @@ namespace DoctorApp.Controllers
         }
 
 
-
         [HttpPost("create")]
         public IActionResult CreateAppointment([FromBody] AppointmentCreateDto appointmentDto)
         {
@@ -144,8 +143,8 @@ namespace DoctorApp.Controllers
                     DId = appointmentDto.DoctorId,
                     PId = appointmentDto.PatientId,
                     Time_slot = appointmentDto.Time_slot,
-                    Appointment_Fee= appointmentDto.Appointment_Fee
-                    
+                    Appointment_Fee = appointmentDto.Appointment_Fee
+
                 };
 
                 // Add the new appointment to the context and save changes
@@ -195,13 +194,85 @@ namespace DoctorApp.Controllers
                 {
                     AppointmentId = appointment.AId,
                     Appointment_Date = appointment.Appointment_Date,
-                    Time_slot= appointment.Time_slot,
+                    Time_slot = appointment.Time_slot,
                     Appointment_Fee = appointment.Appointment_Fee,
                     Doctor = new DoctorDto { DoctorId = appointment.Doctor.DId, Name = appointment.Doctor.DName },
                     Patient = new PatientDto { PatientId = appointment.Patient.PId, Name = appointment.Patient.PName }
                 };
 
                 return Ok(appointmentDto);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception appropriately
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+        [HttpGet("GetAppByDoc/{docId}")]
+        public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointmentByDoc(int docId)
+        {
+            try
+            {
+                // Find the appointment by ID
+                var appointment = _context.Appointments
+                    //.Include(a => a.Doctor)
+                    .Include(a => a.Patient)
+                    .Where(a => a.DId == docId).ToList();
+
+                //if (appointment == null)
+                //{
+                //    return NotFound("Appointment not found");
+                //}
+
+                //// Map the appointment to AppointmentDto for response
+                //var appointmentDto = new AppointmentDto
+                //{
+                //    AppointmentId = appointment.AId,
+                //    Appointment_Date = appointment.Appointment_Date,
+                //    Time_slot = appointment.Time_slot,
+                //    Appointment_Fee = appointment.Appointment_Fee,
+                //    Doctor = new DoctorDto { DoctorId = appointment.Doctor.DId, Name = appointment.Doctor.DName },
+                //    Patient = new PatientDto { PatientId = appointment.Patient.PId, Name = appointment.Patient.PName }
+                //};
+
+                return Ok(appointment);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception appropriately
+                return StatusCode(500, "Internal Server Error");
+            }
+
+
+        }
+        [HttpGet("GetAppByPat/{patId}")]
+        public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointmentByPat(int patId)
+        {
+            try
+            {
+                // Find the appointment by ID
+                var appointment = _context.Appointments
+                    .Include(a => a.Doctor)
+                    //.Include(a => a.Patient)
+                    .Where(a => a.PId == patId).ToList();
+
+                //if (appointment == null)
+                //{
+                //    return NotFound("Appointment not found");
+                //}
+
+                //// Map the appointment to AppointmentDto for response
+                //var appointmentDto = new AppointmentDto
+                //{
+                //    AppointmentId = appointment.AId,
+                //    Appointment_Date = appointment.Appointment_Date,
+                //    Time_slot = appointment.Time_slot,
+                //    Appointment_Fee = appointment.Appointment_Fee,
+                //    Doctor = new DoctorDto { DoctorId = appointment.Doctor.DId, Name = appointment.Doctor.DName },
+                //    Patient = new PatientDto { PatientId = appointment.Patient.PId, Name = appointment.Patient.PName }
+                //};
+
+                return Ok(appointment);
             }
             catch (Exception ex)
             {
