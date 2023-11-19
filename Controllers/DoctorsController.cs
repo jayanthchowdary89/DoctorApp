@@ -22,37 +22,39 @@ namespace DoctorApp.Controllers
             _context = context;
         }
 
-        // GET: api/Doctors
-        [HttpGet]
+        //GET: api/Doctors
+       [HttpGet]
         public async Task<ActionResult<IEnumerable<Doctor>>> GetDoctors()
         {
-          if (_context.Doctors == null)
-          {
-              return NotFound();
-          }
+            if (_context.Doctors == null)
+            {
+                return NotFound();
+            }
             return await _context.Doctors.ToListAsync();
         }
 
         // GET: api/Doctors/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Doctor>> GetDoctor(int id)
-        //{
-        //  if (_context.Doctors == null)
-        //  {
-        //      return NotFound();
-        //  }
-        //    var doctor = await _context.Doctors.FindAsync(id);
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Doctor>> GetDoctor(int id)
+        {
+            if (_context.Doctors == null)
+            {
+                return NotFound();
+            }
+            var doctor = await _context.Doctors.FindAsync(id);
 
-        //    if (doctor == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (doctor == null)
+            {
+                return NotFound();
+            }
 
-        //    return doctor;
-        //}
+            return doctor;
+        }
 
 
-        [HttpGet("{username}")]
+        [Authorize]
+        [HttpGet("GetDoctor/{username}")]
+
         public ActionResult<Doctor> GetDoctorUser(string username)
         {
             if (_context.Doctors == null)
@@ -135,7 +137,7 @@ namespace DoctorApp.Controllers
             return NoContent();
         }
         [Authorize]
-        [HttpGet("GetDoctors")]
+        [HttpGet("GetCurrent")]
         public IActionResult GetDoctorsProfile()
         {
             var currentuser = GetCurrentUserInfo();
@@ -157,9 +159,11 @@ namespace DoctorApp.Controllers
 
                  Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email).Value,
 
-                 Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role).Value
+                 Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role).Value,
 
+                 Dimg = userClaims.FirstOrDefault(o=>o.Type == ClaimTypes.Uri).Value,
 
+                 DId = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Sid).Value
                 };
             }
             // Retrieve user claims from the authenticated user's identity

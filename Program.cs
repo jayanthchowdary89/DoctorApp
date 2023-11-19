@@ -56,11 +56,10 @@ namespace DoctorApp
 
             app.UseAuthorization();
 
-            
 
-            app.UseCors("corsapp");
-
+            app.UseStaticFiles();
             app.MapControllers();
+            app.UseCors("corsapp");
 
             app.Run();
         }

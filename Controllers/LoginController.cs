@@ -32,7 +32,6 @@ namespace DoctorApp.Controllers
                 return Unauthorized();
             }
             else {
-
                var token = _usersLogic.GenerateJwtToken(User);
                 return Ok(new { Token = token });
             }

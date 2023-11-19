@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DoctorApp.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DoctorApp.Controllers
 {
@@ -117,30 +118,60 @@ namespace DoctorApp.Controllers
             return NoContent();
         }
 
-        [HttpGet("GetUser")]
-        public IActionResult GetCurrentUserInfo()
+        
+        [HttpGet("GetPatient/{username}")]
+
+        public ActionResult<Patient> GetPatientUser(string username)
         {
-            // Retrieve user claims from the authenticated user's identity
-            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            var userNameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
-
-            if (userIdClaim != null && userNameClaim != null)
+            if (_context.Patients == null)
             {
-                var userId = userIdClaim.Value;
-                var userName = userNameClaim.Value;
+                return NotFound();
+            }
+            var patient = _context.Patients.FirstOrDefault(o => o.P_UserId == username);
 
-                // Return user information
-                var userInfo = new
-                {
-                    UserId = userId,
-                    UserName = userName,
-                };
-
-                return Ok(userInfo);
+            if (patient == null)
+            {
+                return NotFound();
             }
 
-            // If claims are not found, the user might not be properly authenticated
-            return Unauthorized();
+            return patient;
+        }
+
+
+
+
+        [Authorize]
+        [HttpGet("GetCurrent")]
+        public IActionResult GetDoctorsProfile()
+        {
+            var currentuser = GetCurrentUserInfo();
+            return Ok(currentuser);
+        }
+        private userModel GetCurrentUserInfo()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity != null)
+            {
+                var userClaims = identity.Claims;
+
+                return new userModel
+                {
+
+                    P_UserId = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier).Value,
+
+                    PName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Name).Value,
+
+                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email).Value,
+
+                    Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role).Value,
+
+                    PId = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Sid).Value
+                };
+            }
+            // Retrieve user claims from the authenticated user's identity
+            return null;
+
         }
 
         private bool PatientExists(int id)

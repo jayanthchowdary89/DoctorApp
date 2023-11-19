@@ -79,7 +79,8 @@ namespace DoctorApp.UserServices
                 new Claim(ClaimTypes.NameIdentifier,user.P_UserId),
                 new Claim(ClaimTypes.Role,user.Role),
                 new Claim(ClaimTypes.Name,user.PName),
-                new Claim(ClaimTypes.Email,user.Email)
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.Sid,user.PId.ToString()),
 
             };
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
@@ -102,7 +103,9 @@ namespace DoctorApp.UserServices
                 new Claim(ClaimTypes.Role,user.Role),
                 new Claim(ClaimTypes.Name,user.DName),
                 new Claim(ClaimTypes.Email,user.Email),
-                
+                new Claim(ClaimTypes.Uri,user.Dimg),
+                new Claim(ClaimTypes.Sid,user.DId.ToString()),
+
 
             };
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
