@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using DoctorApp.UserServices;
+using DoctorApp.Repository;
 
 namespace DoctorApp
 {
@@ -21,7 +22,8 @@ namespace DoctorApp
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<DoctorAppDbContext>(item  => item.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
-             builder.Services.AddTransient<IUsersLogic, UsersLogic>();
+            builder.Services.AddTransient<IUsersLogic, UsersLogic>();
+            builder.Services.AddTransient<IDocRepo,DocRepo>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {

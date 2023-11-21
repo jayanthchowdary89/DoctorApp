@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DoctorApp.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class PatientsController : ControllerBase
@@ -34,6 +35,7 @@ namespace DoctorApp.Controllers
         }
 
         // GET: api/Patients/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Patient>> GetPatient(int id)
         {
@@ -53,6 +55,9 @@ namespace DoctorApp.Controllers
 
         // PUT: api/Patients/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPatient(int id, Patient patient)
         {
@@ -92,6 +97,12 @@ namespace DoctorApp.Controllers
               return Problem("Entity set 'DoctorAppDbContext.Patients'  is null.");
           }
 
+            if (_context.Patients.Any(p => p.P_UserId == patient.P_UserId))
+            {
+                // Username already taken, return a conflict response with a custom message
+                return Conflict($"Username '{patient.P_UserId}' is already taken. Choose a different username.");
+            }
+
             _context.Patients.Add(patient);
             await _context.SaveChangesAsync();
 
@@ -99,6 +110,7 @@ namespace DoctorApp.Controllers
         }
 
         // DELETE: api/Patients/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePatient(int id)
         {
@@ -118,7 +130,7 @@ namespace DoctorApp.Controllers
             return NoContent();
         }
 
-        
+        [Authorize]
         [HttpGet("GetPatient/{username}")]
 
         public ActionResult<Patient> GetPatientUser(string username)

@@ -6,20 +6,25 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DoctorApp.Models;
+using DoctorApp.Repository;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DoctorApp.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class DoctorsController : ControllerBase
     {
         private readonly DoctorAppDbContext _context;
 
-        public DoctorsController(DoctorAppDbContext context)
+        private readonly IDocRepo _Repo;
+
+        public DoctorsController(DoctorAppDbContext context,IDocRepo Repo)
         {
             _context = context;
+            _Repo = Repo;
         }
 
         //GET: api/Doctors
@@ -30,10 +35,13 @@ namespace DoctorApp.Controllers
             {
                 return NotFound();
             }
-            return await _context.Doctors.ToListAsync();
+            //return await _context.Doctors.ToListAsync();
+
+            return await _Repo.GetDoctors();
         }
 
         // GET: api/Doctors/5
+        //[Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Doctor>> GetDoctor(int id)
         {
@@ -41,7 +49,9 @@ namespace DoctorApp.Controllers
             {
                 return NotFound();
             }
-            var doctor = await _context.Doctors.FindAsync(id);
+            //var doctor = await _context.Doctors.FindAsync(id);
+
+            var doctor = await _Repo.GetDoctor(id);
 
             if (doctor == null)
             {
@@ -52,6 +62,7 @@ namespace DoctorApp.Controllers
         }
 
 
+        //[Authorize]
         [Authorize]
         [HttpGet("GetDoctor/{username}")]
 
@@ -72,16 +83,17 @@ namespace DoctorApp.Controllers
         }
 
 
+        [Authorize]
 
         [HttpGet("GetDoctorBySpecialization/{dept}")]
 
-        public ActionResult<Doctor> GetDoctorBySpecialization(string dept)
+        public ActionResult<IEnumerable<Doctor>> GetDoctorBySpecialization(string dept)
         {
             if (_context.Doctors == null)
             {
                 return NotFound();
             }
-            var doctor = _context.Doctors.FirstOrDefault(o => o.Specialization == dept);
+            var doctor =  _context.Doctors.Where(o => o.Specialization == dept).ToList();
 
             if (doctor == null)
             {
@@ -93,6 +105,7 @@ namespace DoctorApp.Controllers
 
         // PUT: api/Doctors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDoctor(int id, Doctor doctor)
         {
@@ -124,6 +137,7 @@ namespace DoctorApp.Controllers
 
         // POST: api/Doctors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Doctor>> PostDoctor(Doctor doctor)
         {
@@ -138,6 +152,7 @@ namespace DoctorApp.Controllers
         }
 
         // DELETE: api/Doctors/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDoctor(int id)
         {

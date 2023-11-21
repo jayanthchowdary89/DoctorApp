@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DoctorApp.Models;
 using DoctorApp.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DoctorApp.Controllers
 {
+
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AppointmentsController : ControllerBase

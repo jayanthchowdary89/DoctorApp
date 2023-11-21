@@ -40,6 +40,8 @@ namespace DoctorApp.Models
        // [DataType(DataType.Currency)]
         public int Appointment_Fee { get; set; }
 
+
+
        // public bool? Is_approved { get; set; }
 
         //public AppointmentStatus Status { get; set; }

@@ -5,29 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DoctorApp.Migrations
 {
-    public partial class mg10 : Migration
+    public partial class newerf : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Appointments",
-                columns: table => new
-                {
-                    AId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DId = table.Column<int>(type: "int", nullable: false),
-                    PId = table.Column<int>(type: "int", nullable: false),
-                    Appointment_Date = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Time_slot = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Appointment_Fee = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Is_approved = table.Column<bool>(type: "bit", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appointments", x => x.AId);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Doctors",
                 columns: table => new
@@ -76,6 +57,45 @@ namespace DoctorApp.Migrations
                 {
                     table.PrimaryKey("PK_Patients", x => x.PId);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Appointments",
+                columns: table => new
+                {
+                    AId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DId = table.Column<int>(type: "int", nullable: false),
+                    PId = table.Column<int>(type: "int", nullable: false),
+                    Appointment_Date = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Time_slot = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Appointment_Fee = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointments", x => x.AId);
+                    table.ForeignKey(
+                        name: "FK_Appointments_Doctors_DId",
+                        column: x => x.DId,
+                        principalTable: "Doctors",
+                        principalColumn: "DId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Appointments_Patients_PId",
+                        column: x => x.PId,
+                        principalTable: "Patients",
+                        principalColumn: "PId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_DId",
+                table: "Appointments",
+                column: "DId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_PId",
+                table: "Appointments",
+                column: "PId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

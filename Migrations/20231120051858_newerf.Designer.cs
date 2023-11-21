@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoctorApp.Migrations
 {
     [DbContext(typeof(DoctorAppDbContext))]
-    [Migration("20231117160409_mg10")]
-    partial class mg10
+    [Migration("20231120051858_newerf")]
+    partial class newerf
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,19 +35,13 @@ namespace DoctorApp.Migrations
                     b.Property<DateTime?>("Appointment_Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Appointment_Fee")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Appointment_Fee")
+                        .HasColumnType("int");
 
                     b.Property<int>("DId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("Is_approved")
-                        .HasColumnType("bit");
-
                     b.Property<int>("PId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("Time_slot")
@@ -55,6 +49,10 @@ namespace DoctorApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AId");
+
+                    b.HasIndex("DId");
+
+                    b.HasIndex("PId");
 
                     b.ToTable("Appointments");
                 });
@@ -182,6 +180,25 @@ namespace DoctorApp.Migrations
                     b.HasKey("PId");
 
                     b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("DoctorApp.Models.Appointment", b =>
+                {
+                    b.HasOne("DoctorApp.Models.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DoctorApp.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }
