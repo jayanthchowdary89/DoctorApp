@@ -50,14 +50,12 @@ namespace DoctorApp.Controllers
                 return NotFound();
             }
             //var doctor = await _context.Doctors.FindAsync(id);
-
             var doctor = await _Repo.GetDoctor(id);
 
             if (doctor == null)
             {
                 return NotFound();
             }
-
             return doctor;
         }
 
